@@ -1,0 +1,711 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="../../../style.css" type="text/css" media="screen">
+<link rel="stylesheet" href="../../../print.css" type="text/css" media="print">
+<meta content="OAuthConsumer,org.coderepos.oauth.OAuthConsumer,agent,isFetching,lastAccessToken,lastReponseBody,lastRequest,lastRequestToken,lastRequestURI,lastResponse,httpMethod,paramMethod,realm,signatureMethod,timeout,clear,findRealmFromLastResponse,genOAuthHeader,genOAuthParams,genOAuthQuery,getAccessToken,getRequestToken,request" name="keywords">
+<title>org.coderepos.oauth.OAuthConsumer</title>
+</head>
+<body>
+<script type="text/javascript" language="javascript" src="../../../asdoc.js"></script><script type="text/javascript" language="javascript" src="../../../cookies.js"></script><script type="text/javascript" language="javascript">
+<!--
+				asdocTitle = 'OAuthConsumer - API Documentation';
+				var baseRef = '../../../';
+				window.onload = configPage;
+			--></script>
+<table style="display:none" id="titleTable" cellspacing="0" cellpadding="0" class="titleTable">
+<tr>
+<td align="left" class="titleTableTitle">API Documentation</td><td align="right" class="titleTableTopNav"><a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../package-summary.html">All&nbsp;Packages</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../all-classes.html')" href="../../../class-summary.html">All&nbsp;Classes</a>&nbsp;|&nbsp;<a onclick="loadClassListFrame('../../../index-list.html')" href="../../../all-index-A.html">Index</a>&nbsp;|&nbsp;<a href="../../../index.html?org/coderepos/oauth/OAuthConsumer.html&amp;org/coderepos/oauth/class-list.html" id="framesLink1">Frames</a><a onclick="parent.location=document.location" href="" style="display:none" id="noFramesLink1">No&nbsp;Frames</a></td><td rowspan="3" align="right" class="titleTableLogo"><img alt="Adobe Logo" title="Adobe Logo" class="logoImage" src="../../../images/logo.jpg"></td>
+</tr>
+<tr class="titleTableRow2">
+<td align="left" id="subTitle" class="titleTableSubTitle">Class&nbsp;OAuthConsumer</td><td align="right" id="subNav" class="titleTableSubNav"><a href="#propertySummary">Properties</a>&nbsp;| <a href="#methodSummary">Methods</a></td>
+</tr>
+<tr class="titleTableRow3">
+<td colspan="2">&nbsp;</td>
+</tr>
+</table>
+<script type="text/javascript" language="javascript">
+<!--
+if (!isEclipse() || window.name != ECLIPSE_FRAME_NAME) {titleBar_setSubTitle("Class OAuthConsumer"); titleBar_setSubNav(false,true,false,false,false,false,true,false,false,false,false,false,false,false);}
+--></script>
+<div class="MainContent">
+<table cellspacing="0" cellpadding="0" class="classHeaderTable">
+<tr>
+<td class="classHeaderTableLabel">Package</td><td><a onclick="javascript:loadClassListFrame('class-list.html')" href="package-detail.html">org.coderepos.oauth</a></td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Class</td><td class="classSignature">public class OAuthConsumer</td>
+</tr>
+<tr>
+<td class="classHeaderTableLabel">Inheritance</td><td class="inheritanceList">OAuthConsumer <img class="inheritArrow" alt="Inheritance" title="Inheritance" src="../../../images/inherit-arrow.gif"> flash.events.EventDispatcher</td>
+</tr>
+</table>
+<p></p>
+   OAuth consumer agent class
+      <p></p>
+<br>
+<span class="label">Example</span>
+<br>   <div class='listing'><pre>
+      var consumer:OAuthConsumer = new OAuthConsumer('consumerKey', 'consumerSecret');
+   consumer.addEventListener(OAuthEvent.GET_REQUEST_TOKEN_COMPLETED, onCompletedToGetRequestToken);
+   consumer.addEventListener(OAuthEvent.GET_REQUEST_TOKEN_FAILED, onFailedToGetRequestToken);
+   consumer.getRequestToken(new URI("http://exmaple.org/request_token"));
+      private function onCompletedToGetRequestToken(e:OAuthEvent):void {
+     var requestToken:OAuthToken = e.result.token;
+     myApp.saveRequestToken(requestToken);
+     var authorizeURI:URI = new URI("http://example.org/authorize");
+     authorizeURI.setQueryValue("token", requestToken.token);
+     navigateToURL(authorizeURL);
+   }
+      private function onFailedToGetRequestToken(e:OAuthEvent):void {
+     showError("[" + String(e.result.code) + "] " + e.result.message);
+   }
+      consumer.addEventListener(OAuthEvent.GET_ACCESS_TOKEN_COMPLETED, onCompletedToGetAccessToken);
+   consumer.addEventListener(OAuthEvent.GET_ACCESS_TOKEN_FAILED, onFailedToGetAccessToken);
+   var requestToken:OAuthToken = myApp.loadRequestToken();
+   consumer.getAccessToken(new URI("http://example.org/access_token"), requestToken);
+      private function onCompletedToGetAccessToken(e:OAuthEvent):void {
+     var accessToken:OAuthToken = e.result.token;
+     myApp.saveAccessToken(accessToken);
+   }
+      private function onFailedToGetAccessToken(e:OAuthEvent):void {
+     showError("[" + String(e.result.code) + "] " + e.result.message);
+   }
+      consumer.addEventListener(OAuthEvent.REQUEST_COMPLETED, onCompletedToRequest);
+   consumer.addEventListener(OAuthEvent.REQUEST_FAILED, onFailedToRequest);
+   consumer.request(new URI("http://example.org/resource"));
+      private function onCompletedToRequest(e:OAuthEvent):void {
+     var content:ByteArray = e.result.content;
+   }
+      private function onFailedToRequest(e:OAuthEvent):void {
+     showError("[" + String(e.result.code) + "] " + e.result.message);
+   }
+         </pre></div>
+   <p></p>
+<br>
+<hr>
+</div>
+<a name="propertySummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Properties</div>
+<table id="summaryTableProperty" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Property</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#agent">agent</a> : String<div class="summaryTableDescription">
+     Getter for agent name.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#httpMethod">httpMethod</a> : String<div class="summaryTableDescription">[write-only]
+     Setter for httpMethod
+          </div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#isFetching">isFetching</a> : Boolean<div class="summaryTableDescription">[read-only]
+     Returns if the http client is fetching or not.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lastAccessToken">lastAccessToken</a> : <a href="../oauth/OAuthToken.html">OAuthToken</a>
+<div class="summaryTableDescription">[read-only]
+     Returns the access token obtained by last request.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lastReponseBody">lastReponseBody</a> : ByteArray<div class="summaryTableDescription">[read-only]
+     Returns the ByteArray object obtained by last request.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lastRequest">lastRequest</a> : <a href="../oauth/OAuthRequest.html">OAuthRequest</a>
+<div class="summaryTableDescription">[read-only]
+     Returns the OAuthRequest object used for last request.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lastRequestToken">lastRequestToken</a> : <a href="../oauth/OAuthToken.html">OAuthToken</a>
+<div class="summaryTableDescription">[read-only]
+     Returns the request token obtained by last request.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lastRequestURI">lastRequestURI</a> : URI<div class="summaryTableDescription">[read-only]
+     Returns the URI object used for last request.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#lastResponse">lastResponse</a> : HttpResponse<div class="summaryTableDescription">[read-only]
+     Returns the HttpResponse object obtained by last request.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#paramMethod">paramMethod</a> : uint<div class="summaryTableDescription">[write-only]
+     Setter for paramMethod
+          </div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#realm">realm</a> : String<div class="summaryTableDescription">[write-only]
+     Setter for realm
+          </div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#signatureMethod">signatureMethod</a> : Class<div class="summaryTableDescription">[write-only]
+     Setter for signature method
+          </div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol"><a class="signatureLink" href="#timeout">timeout</a> : int<div class="summaryTableDescription">[write-only]
+     Setter for timeout-seconds.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+</table>
+</div>
+<a name="methodSummary"></a>
+<div class="summarySection">
+<div class="summaryTableTitle">Public Methods</div>
+<table id="summaryTableMethod" class="summaryTable " cellpadding="3" cellspacing="0">
+<tr>
+<th>&nbsp;</th><th colspan="2">Method</th><th class="summaryTableOwnerCol">Defined&nbsp;by</th>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#OAuthConsumer()">OAuthConsumer</a>(consumerKey:String = "", consumerSecret:String = "")</div>
+<div class="summaryTableDescription">
+     Constructor
+          </div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#clear()">clear</a>():void</div>
+<div class="summaryTableDescription">
+     Clear last request and response.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#findRealmFromLastResponse()">findRealmFromLastResponse</a>():String</div>
+<div class="summaryTableDescription">
+     If the last response includes WWW-Authenticate header,
+     and it requires OAuth, get realm value from the header.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#genOAuthHeader()">genOAuthHeader</a>(httpMethod:String, url:URI, realm:String = "", token:<a href="OAuthToken.html">OAuthToken</a> = null):String</div>
+<div class="summaryTableDescription">
+     Generate HTTP Authorization header for OAuth
+     
+     </div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#genOAuthParams()">genOAuthParams</a>(httpMethod:String, url:URI, token:<a href="OAuthToken.html">OAuthToken</a> = null):Object</div>
+<div class="summaryTableDescription">
+     Generate object that includes each parameters OAuth spec requires.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#genOAuthQuery()">genOAuthQuery</a>(httpMethod:String, url:URI, token:<a href="OAuthToken.html">OAuthToken</a> = null, extraParams:Object = null):String</div>
+<div class="summaryTableDescription">
+     Generate query-string that includes OAuth params,
+     this query-string is required in case the param-method URL_QUERY is choosed.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getAccessToken()">getAccessToken</a>(uri:URI, token:<a href="OAuthToken.html">OAuthToken</a>, realm:String = null):void</div>
+<div class="summaryTableDescription">
+     Starts to get access token.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#getRequestToken()">getRequestToken</a>(uri:URI, realm:String = null):void</div>
+<div class="summaryTableDescription">
+     Starts to get request token.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+<tr class="">
+<td class="summaryTablePaddingCol">&nbsp;</td><td class="summaryTableInheritanceCol">&nbsp;</td><td class="summaryTableSignatureCol">
+<div class="summarySignature">
+<a class="signatureLink" href="#request()">request</a>(uri:URI, option:<a href="OAuthRequestOption.html">OAuthRequestOption</a> = null):void</div>
+<div class="summaryTableDescription">
+     Request protected-resource.</div>
+</td><td class="summaryTableOwnerCol">OAuthConsumer</td>
+</tr>
+</table>
+</div>
+<script type="text/javascript" language="javascript">
+<!--
+showHideInherited();
+--></script>
+<div class="MainContent">
+<a name="propertyDetail"></a>
+<div class="detailSectionHeader">Property detail</div>
+<a name="agent"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">agent</td><td class="detailHeaderType">property</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>agent:String</code>&nbsp;&nbsp;[read-write]<p>
+     Getter for agent name.
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get agent():String</code>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set agent(value:String):void</code>
+<br>
+</div>
+<a name="httpMethod"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">httpMethod</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>httpMethod:String</code>&nbsp;&nbsp;[write-only]<p>
+     Setter for httpMethod
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set httpMethod(value:String):void</code>
+<br>
+</div>
+<a name="isFetching"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">isFetching</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>isFetching:Boolean</code>&nbsp;&nbsp;[read-only]<p>
+     Returns if the http client is fetching or not.
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get isFetching():Boolean</code>
+<br>
+</div>
+<a name="lastAccessToken"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">lastAccessToken</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>lastAccessToken:<a href="../oauth/OAuthToken.html">OAuthToken</a></code>&nbsp;&nbsp;[read-only]<p>
+     Returns the access token obtained by last request.
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get lastAccessToken():<a href="../oauth/OAuthToken.html">OAuthToken</a></code>
+<br>
+</div>
+<a name="lastReponseBody"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">lastReponseBody</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>lastReponseBody:ByteArray</code>&nbsp;&nbsp;[read-only]<p>
+     Returns the ByteArray object obtained by last request.
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get lastReponseBody():ByteArray</code>
+<br>
+</div>
+<a name="lastRequest"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">lastRequest</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>lastRequest:<a href="../oauth/OAuthRequest.html">OAuthRequest</a></code>&nbsp;&nbsp;[read-only]<p>
+     Returns the OAuthRequest object used for last request.
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get lastRequest():<a href="../oauth/OAuthRequest.html">OAuthRequest</a></code>
+<br>
+</div>
+<a name="lastRequestToken"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">lastRequestToken</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>lastRequestToken:<a href="../oauth/OAuthToken.html">OAuthToken</a></code>&nbsp;&nbsp;[read-only]<p>
+     Returns the request token obtained by last request.
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get lastRequestToken():<a href="../oauth/OAuthToken.html">OAuthToken</a></code>
+<br>
+</div>
+<a name="lastRequestURI"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">lastRequestURI</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>lastRequestURI:URI</code>&nbsp;&nbsp;[read-only]<p>
+     Returns the URI object used for last request.
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get lastRequestURI():URI</code>
+<br>
+</div>
+<a name="lastResponse"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">lastResponse</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>lastResponse:HttpResponse</code>&nbsp;&nbsp;[read-only]<p>
+     Returns the HttpResponse object obtained by last request.
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function get lastResponse():HttpResponse</code>
+<br>
+</div>
+<a name="paramMethod"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">paramMethod</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>paramMethod:uint</code>&nbsp;&nbsp;[write-only]<p>
+     Setter for paramMethod
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set paramMethod(value:uint):void</code>
+<br>
+</div>
+<a name="realm"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">realm</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>realm:String</code>&nbsp;&nbsp;[write-only]<p>
+     Setter for realm
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set realm(value:String):void</code>
+<br>
+</div>
+<a name="signatureMethod"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">signatureMethod</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>signatureMethod:Class</code>&nbsp;&nbsp;[write-only]<p>
+     Setter for signature method
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set signatureMethod(value:Class):void</code>
+<br>
+</div>
+<a name="timeout"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">timeout</td><td class="detailHeaderType">property</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>timeout:int</code>&nbsp;&nbsp;[write-only]<p>
+     Setter for timeout-seconds.
+          </p><span class="label">Implementation</span>
+<br>
+<code>&nbsp;&nbsp;&nbsp;&nbsp;public function set timeout(value:int):void</code>
+<br>
+</div>
+<a name="constructorDetail"></a>
+<div class="detailSectionHeader">Constructor detail</div>
+<a name="OAuthConsumer()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">OAuthConsumer</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">constructor</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function OAuthConsumer(consumerKey:String = "", consumerSecret:String = "")</code><p>
+     Constructor
+          </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">consumerKey</span>:String</code> (default = "<code></code>")<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">consumerSecret</span>:String</code> (default = "<code></code>")<code></code></td>
+</tr>
+</table>
+</div>
+<a name="methodDetail"></a>
+<div class="detailSectionHeader">Method detail</div>
+<a name="clear()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">clear</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function clear():void</code><p>
+     Clear last request and response.
+          </p></div>
+<a name="findRealmFromLastResponse()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">findRealmFromLastResponse</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function findRealmFromLastResponse():String</code><p>
+     If the last response includes WWW-Authenticate header,
+     and it requires OAuth, get realm value from the header.
+          </p><p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code></td>
+</tr>
+</table>
+</div>
+<a name="genOAuthHeader()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">genOAuthHeader</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function genOAuthHeader(httpMethod:String, url:URI, realm:String = "", token:<a href="OAuthToken.html">OAuthToken</a> = null):String</code><p>
+     Generate HTTP Authorization header for OAuth
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">httpMethod</span>:String</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">url</span>:URI</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">realm</span>:String</code> (default = "<code></code>")<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">token</span>:<a href="OAuthToken.html">OAuthToken</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code></td>
+</tr>
+</table>
+</div>
+<a name="genOAuthParams()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">genOAuthParams</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function genOAuthParams(httpMethod:String, url:URI, token:<a href="OAuthToken.html">OAuthToken</a> = null):Object</code><p>
+     Generate object that includes each parameters OAuth spec requires.
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">httpMethod</span>:String</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">url</span>:URI</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">token</span>:<a href="OAuthToken.html">OAuthToken</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>Object</code></td>
+</tr>
+</table>
+</div>
+<a name="genOAuthQuery()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">genOAuthQuery</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function genOAuthQuery(httpMethod:String, url:URI, token:<a href="OAuthToken.html">OAuthToken</a> = null, extraParams:Object = null):String</code><p>
+     Generate query-string that includes OAuth params,
+     this query-string is required in case the param-method URL_QUERY is choosed.
+     
+     </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">httpMethod</span>:String</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">url</span>:URI</code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">token</span>:<a href="OAuthToken.html">OAuthToken</a></code> (default = <code>null</code>)<code></code></td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">extraParams</span>:Object</code> (default = <code>null</code>)<code></code></td>
+</tr>
+</table>
+<p></p>
+<span class="label">Returns</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20"></td><td><code>String</code></td>
+</tr>
+</table>
+</div>
+<a name="getAccessToken()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getAccessToken</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getAccessToken(uri:URI, token:<a href="OAuthToken.html">OAuthToken</a>, realm:String = null):void</code><p>
+     Starts to get access token.
+          </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">uri</span>:URI</code> &mdash; request token uri
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">token</span>:<a href="OAuthToken.html">OAuthToken</a></code> &mdash; request token
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">realm</span>:String</code> (default = <code>null</code>)<code></code> &mdash; optional
+     </td>
+</tr>
+</table>
+</div>
+<a name="getRequestToken()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">getRequestToken</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function getRequestToken(uri:URI, realm:String = null):void</code><p>
+     Starts to get request token.
+          </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">uri</span>:URI</code> &mdash; request token uri
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">realm</span>:String</code> (default = <code>null</code>)<code></code> &mdash; optional
+     </td>
+</tr>
+</table>
+</div>
+<a name="request()"></a>
+<table cellspacing="0" cellpadding="0" class="detailHeader">
+<tr>
+<td class="detailHeaderName">request</td><td class="detailHeaderParens">()</td><td class="detailHeaderType">method</td><td class="detailHeaderRule">&nbsp;</td>
+</tr>
+</table>
+<div class="detailBody">
+<code>public function request(uri:URI, option:<a href="OAuthRequestOption.html">OAuthRequestOption</a> = null):void</code><p>
+     Request protected-resource.
+          </p><span class="label">Parameters</span>
+<table border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="20px"></td><td><code><span class="label">uri</span>:URI</code> &mdash; protected resource uri
+     </td>
+</tr>
+<tr>
+<td class="paramSpacer">&nbsp;</td>
+</tr>
+<tr>
+<td width="20px"></td><td><code><span class="label">option</span>:<a href="OAuthRequestOption.html">OAuthRequestOption</a></code> (default = <code>null</code>)<code></code> &mdash; OAuthRequestOption object
+     </td>
+</tr>
+</table>
+</div>
+<br>
+<br>
+<hr>
+<br>
+<p></p>
+<center class="copyright"> 
+</center>
+</div>
+</body>
+</html>
+<!-- -->

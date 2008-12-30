@@ -1,0 +1,16 @@
+<flex-config>
+  <compiler>
+    <source-path>
+      <path-element>src</path-element>
+    </source-path>
+    <external-library-path append="true">
+      <path-element>lib</path-element>
+    </external-library-path>
+  </compiler>
+  <output>bin/as3oauth.swc</output>
+  <include-sources>
+    <path-element>src</path-element> 
+  </include-sources>
+</flex-config>
+<!-- compc +configname=air -load-config+=lib-config.xml -->
+<!-- asdoc +configname=air -doc-sources ./src -output doc -compiler.external-library-path lib -->
