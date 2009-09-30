@@ -481,6 +481,7 @@ package org.coderepos.oauth {
      * Starts to get request token.
      *
      * @param uri request token uri
+     * @param callback uri to callback. if you omit it, "oob" is set.
      * @param realm optional
      * @eventType org.coderepos.oauth.events.OAuthEvent.GET_REQUEST_TOKEN_COMPLETED
      * @eventType org.coderepos.oauth.events.OAuthEvent.GET_REQUEST_TOKEN_FAILED
