@@ -47,7 +47,9 @@ package org.coderepos.oauth {
    * consumer.addEventListener(OAuthEvent.GET_ACCESS_TOKEN_COMPLETED, onCompletedToGetAccessToken);
    * consumer.addEventListener(OAuthEvent.GET_ACCESS_TOKEN_FAILED, onFailedToGetAccessToken);
    * var requestToken:OAuthToken = myApp.loadRequestToken();
-   * consumer.getAccessToken(new URI("http://example.org/access_token"), requestToken);
+   * var verifier:String = userInputFieldForPINCode.text;
+   * consumer.getAccessToken(new URI("http://example.org/access_token"),
+   * requestTokenrequestToken, verifier);
    *
    * private function onCompletedToGetAccessToken(e:OAuthEvent):void {
    *   var accessToken:OAuthToken = e.result.token;
@@ -110,7 +112,7 @@ package org.coderepos.oauth {
       _httpMethod = "POST";
       _signatureMethod = HMAC_SHA1;
       _agent = "as3oauth";
-      _timeout = -1;
+      _timeout = 15;
       clear();
     }
 
@@ -267,33 +269,37 @@ package org.coderepos.oauth {
       return _lastAccessToken;
     }
 
-    private function onClose():void {
+    private function onClose(e:Event):void {
       _isFetching = false;
+      _client.cancel();
     }
 
     private function onData(e:HttpDataEvent):void {
       _lastResponseBody.writeBytes(e.bytes);
     }
 
-    private function onError(e:Error):void {
+    private function onError(e:ErrorEvent):void {
       _isFetching = false;
       var result:OAuthEventResult = new OAuthEventResult();
-      result.message = e.message;
+      result.message = e.toString();
+      _client.cancel();
       dispatchEvent(new OAuthEvent(OAuthEvent.TIMEOUT, result));
     }
 
     private function onIOError(e:IOErrorEvent):void {
       _isFetching = false;
+      _client.cancel();
       dispatchEvent(e.clone());
     }
 
     private function onSecurityError(e:SecurityErrorEvent):void {
       _isFetching = false;
+      _client.cancel();
       dispatchEvent(e.clone());
     }
 
-    private function onStatus(res:HttpResponse):void {
-      _lastResponse = res;
+    private function onStatus(e:HttpStatusEvent):void {
+      _lastResponse = e.response;
     }
 
     /**
@@ -362,20 +368,20 @@ package org.coderepos.oauth {
 
       if (pMeth == OAuthParamMethod.URL_QUERY) {
 
-        query = genOAuthQuery(req.method, uri, option.token, option.extraParams);
+        query = genOAuthQuery(req.method, uri, option.token, option.getAllParams());
         currentQuery = uri.queryRaw;
         uri.queryRaw = (currentQuery.length > 0) ? currentQuery + '&' + query : query;
 
       } else if (pMeth == OAuthParamMethod.POST_BODY) {
 
-        query = genOAuthQuery(req.method, uri, option.token, option.extraParams); 
+        query = genOAuthQuery(req.method, uri, option.token, option.getAllParams());
         content = new ByteArray();
         content.writeUTFBytes(query);
         option.content = content;
 
       } else {
 
-        var header:String = genOAuthHeader(req.method, uri, realm, option.token);
+        var header:String = genOAuthHeader(req.method, uri, realm, option.token, option.getAllParams());
         req.addHeader("Authorization", header);
 
         if (option.extraParams != null) {
@@ -386,7 +392,7 @@ package org.coderepos.oauth {
             pairs.push(pair);
           }
 
-          var data:String = pairs.join('join');
+          var data:String = pairs.join('&');
 
           if (httpMeth == "POST" || httpMeth == "PUT") {
 
@@ -408,11 +414,13 @@ package org.coderepos.oauth {
           req.addHeader(headerName, option.headers[headerName]);
       }
 
-      if (option.content != null)
+      if (option.content != null) {
+        option.content.position = 0;
         req.body = option.content;
+      }
 
       if (httpMeth == "POST" || httpMeth == "PUT") {
-        var type:String = req.header.getValue("Content-Type");  
+        var type:String = req.header.getValue("Content-Type");
         if (type == null)
           req.addHeader("Content-Type", "application/x-www-form-urlencoded");
       }
@@ -441,17 +449,28 @@ package org.coderepos.oauth {
       sendRequest(uri, option);
     }
 
-    private function onCompletedToRequest():void {
+    public function get(uri:URI, token:OAuthToken, params:Object=null):void {
+        var option:OAuthRequestOption = new OAuthRequestOption();
+        option.httpMethod = "GET";
+        option.token = token;
+        if (params != null)
+            option.extraParams = params;
+        request(uri, option);
+    }
+
+    private function onCompletedToRequest(e:HttpResponseEvent):void {
       var code:uint = uint(_lastResponse.code);
       var result:OAuthEventResult = new OAuthEventResult();
       _isFetching = false;
       result.code = code;
       result.message = _lastResponse.message;
+      _client.cancel();
+      _lastResponseBody.position = 0;
+      var response:ByteArray = new ByteArray();
+      response.writeBytes(_lastResponseBody);
+      response.position = 0;
+      result.content = response;
       if (code == 200) {
-        _lastResponseBody.position = 0;
-        var response:ByteArray = new ByteArray();
-        response.readBytes(_lastResponseBody);
-        result.content = response;
         dispatchEvent(new OAuthEvent(OAuthEvent.REQUEST_COMPLETED, result));
       } else {
         dispatchEvent(new OAuthEvent(OAuthEvent.REQUEST_FAILED, result));
@@ -468,21 +487,23 @@ package org.coderepos.oauth {
      * @langversion ActionScript 3.0
      * @playerversion 9.0
      */
-    public function getRequestToken(uri:URI, realm:String=null):void {
+    public function getRequestToken(uri:URI, callback:String="oob", realm:String=null):void {
       if (_isFetching) return;
       clear();
       initializeHttpClient(onCompletedToGetRequestToken);
       var option:OAuthRequestOption = new OAuthRequestOption();
       option.realm = realm;
+      option.oauthParams = { oauth_callback: callback };
       sendRequest(uri, option);
     }
 
-    private function onCompletedToGetRequestToken():void {
+    private function onCompletedToGetRequestToken(e:HttpResponseEvent):void {
       var code:uint = uint(_lastResponse.code);
       var result:OAuthEventResult = new OAuthEventResult();
       _isFetching = false;
       result.code = code;
       result.message = _lastResponse.message;
+      _client.cancel();
       if (code == 200) {
         _lastResponseBody.position = 0;
         var response:String = _lastResponseBody.readUTFBytes(_lastResponseBody.bytesAvailable);
@@ -506,7 +527,7 @@ package org.coderepos.oauth {
      * @langversion ActionScript 3.0
      * @playerversion 9.0
      */
-    public function getAccessToken(uri:URI, token:OAuthToken,
+    public function getAccessToken(uri:URI, token:OAuthToken, verifier:String,
       realm:String=null):void {
       if (_isFetching) return;
       clear();
@@ -514,15 +535,17 @@ package org.coderepos.oauth {
       var option:OAuthRequestOption = new OAuthRequestOption();
       option.realm = realm;
       option.token = token;
+      option.oauthParams = { oauth_verifier: verifier };
       sendRequest(uri, option);
     }
 
-    private function onCompletedToGetAccessToken():void {
+    private function onCompletedToGetAccessToken(e:HttpResponseEvent):void {
       var code:uint = uint(_lastResponse.code);
       var result:OAuthEventResult = new OAuthEventResult();
       _isFetching = false;
       result.code = code;
       result.message = _lastResponse.message;
+      _client.cancel();
       if (code == 200) {
         _lastResponseBody.position = 0;
         var response:String = _lastResponseBody.readUTFBytes(_lastResponseBody.bytesAvailable);
@@ -569,15 +592,10 @@ package org.coderepos.oauth {
      */
     public function genOAuthQuery(httpMethod:String, url:URI,
       token:OAuthToken=null, extraParams:Object=null):String {
-      var params:Object = genOAuthParams(httpMethod, url, token);     
-      var merged:Object = (extraParams == null) ? new Object() : extraParams;
-      var prop:String;
-      for (prop in params) {
-        merged[prop] = params[prop];
-      }
+      var params:Object = genOAuthParams(httpMethod, url, token, extraParams);
       var pairs:Array = new Array();
-      for (prop in merged) {
-        var pair:String = OAuthUtil.encode(prop) + '=' + OAuthUtil.encode(merged[prop]);
+      for (var prop:String in params) {
+        var pair:String = OAuthUtil.encode(prop) + '=' + OAuthUtil.encode(params[prop]);
         pairs.push(pair);
       }
       pairs.sort();
@@ -596,8 +614,8 @@ package org.coderepos.oauth {
      * @playerversion 9.0
      */
     public function genOAuthHeader(httpMethod:String, url:URI,
-      realm:String='', token:OAuthToken=null):String {
-      var params:Object = genOAuthParams(httpMethod, url, token);
+      realm:String='', token:OAuthToken=null, extraParams:Object=null):String {
+      var params:Object = genOAuthParams(httpMethod, url, token, extraParams);
       var header:String = OAuthUtil.buildAuthHeader(realm, params);
       return header;
     }
@@ -613,7 +631,7 @@ package org.coderepos.oauth {
      * @playerversion 9.0
      */
     public function genOAuthParams(httpMethod:String, url:URI,
-      token:OAuthToken=null):Object {
+      token:OAuthToken=null, extraParams:Object=null):Object {
       var params:Object = new Object();
       params.oauth_consumer_key = _consumerKey;
       params.oauth_timestamp = Math.floor((new Date()).getTime() * 1000);
@@ -621,6 +639,11 @@ package org.coderepos.oauth {
       params.oauth_version = "1.0";
       if (token != null) {
         params.oauth_token = token.token;
+      }
+      if (extraParams != null) {
+        for(var prop:String in extraParams) {
+            params[prop] = extraParams[prop];
+        }
       }
       var tokenSecret:String = (token != null) ? token.secret : '';
       var method:OAuthSignatureMethod = new _signatureMethod(_consumerSecret, tokenSecret);

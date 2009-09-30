@@ -62,12 +62,12 @@ package org.coderepos.oauth {
      * @param body
      * @langversion ActionScript 3.0
      * @playerversion 9.0
-     */
     public function set body(_data:ByteArray):void {
       _body = new ByteArray();
       _body.writeBytes(_data);
       addHeader("Content-Length", _body.length);
     }
+     */
   }
 
 }

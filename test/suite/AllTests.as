@@ -13,7 +13,6 @@ package suite {
       addTest( OAuthSignatureMethodTest.suite() );
       addTest( OAuthRequestTest.suite()         );
       addTest( OAuthConsumerTest.suite()        );
-      addTest( OAuthTermieTest.suite()          );
     }
     
   }

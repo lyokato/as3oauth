@@ -32,6 +32,10 @@ package org.coderepos.oauth {
      */
     public var extraParams:Object;
     /**
+     * oauth parameters as an Object
+     */
+    public var oauthParams:Object;
+    /**
      * HTTP headers as an Object
      */
     public var headers:Object;
@@ -51,6 +55,22 @@ package org.coderepos.oauth {
      * @playerversion 9.0
      */
     public function OAuthRequestOption() { }
+
+    public function getAllParams():Object {
+        var obj:Object = new Object();
+        var prop:String;
+        if (extraParams != null) {
+            for (prop in extraParams) {
+                obj[prop] = extraParams[prop];
+            }
+        }
+        if (oauthParams != null) {
+            for (prop in oauthParams) {
+                obj[prop] = oauthParams[prop];
+            }
+        }
+        return obj;
+    }
 
   }
 
