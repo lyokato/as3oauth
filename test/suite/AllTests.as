@@ -10,6 +10,7 @@ package suite {
       // For examples, see: http://code.google.com/p/as3flexunitlib/wiki/Resources
       addTest( OAuthUtilTest.suite()            );
       addTest( OAuthTokenTest.suite()           );
+      addTest( OAuthResponseTest.suite()        );
       addTest( OAuthSignatureMethodTest.suite() );
       addTest( OAuthRequestTest.suite()         );
       addTest( OAuthConsumerTest.suite()        );

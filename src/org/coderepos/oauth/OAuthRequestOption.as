@@ -18,7 +18,6 @@ package org.coderepos.oauth {
    * Class represents request-options
    */
   public class OAuthRequestOption {
-
     /**
      * realm
      */
@@ -71,8 +70,6 @@ package org.coderepos.oauth {
         }
         return obj;
     }
-
   }
-
 }
 

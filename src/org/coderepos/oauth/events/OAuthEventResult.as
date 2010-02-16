@@ -12,7 +12,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package org.coderepos.oauth.events {
 
-  import org.coderepos.oauth.OAuthToken;
+  import org.coderepos.oauth.OAuthResponse;
   import flash.utils.ByteArray;
 
   /**
@@ -29,9 +29,9 @@ package org.coderepos.oauth.events {
      */
     public var message:String;
     /**
-     * Request/Access token
+     * Request/Access response
      */
-    public var token:OAuthToken;
+    public var response:OAuthResponse;
     /**
      * response body
      */

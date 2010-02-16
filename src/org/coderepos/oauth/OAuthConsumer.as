@@ -72,7 +72,6 @@ package org.coderepos.oauth {
    *   showError("[" + String(e.result.code) + "] " + e.result.message);
    * }
    *
-   *
    * </listing>
    */
   public class OAuthConsumer extends EventDispatcher {
@@ -124,6 +123,7 @@ package org.coderepos.oauth {
      */
     public function clear():void {
       _lastResponse = null;
+      //_lastResponseBody.length = 0;
       _lastResponseBody = new ByteArray();
       _lastRequest = null;
       _lastRequestURI = null;
@@ -476,7 +476,6 @@ package org.coderepos.oauth {
         dispatchEvent(new OAuthEvent(OAuthEvent.REQUEST_FAILED, result));
       }
     }
-
     /**
      * Starts to get request token.
      *
@@ -507,10 +506,10 @@ package org.coderepos.oauth {
       _client.cancel();
       if (code == 200) {
         _lastResponseBody.position = 0;
-        var response:String = _lastResponseBody.readUTFBytes(_lastResponseBody.bytesAvailable);
-        var token:OAuthToken = OAuthToken.fromString(response);
-        result.token = token;
-        _lastRequestToken = token;
+        var responseSrc:String = _lastResponseBody.readUTFBytes(_lastResponseBody.bytesAvailable);
+        var response:OAuthResponse = OAuthResponse.fromString(responseSrc);
+        result.response = response;
+        _lastRequestToken = response.token;
         dispatchEvent(new OAuthEvent(OAuthEvent.GET_REQUEST_TOKEN_COMPLETED, result));
       } else {
         dispatchEvent(new OAuthEvent(OAuthEvent.GET_REQUEST_TOKEN_FAILED, result));
@@ -549,10 +548,10 @@ package org.coderepos.oauth {
       _client.cancel();
       if (code == 200) {
         _lastResponseBody.position = 0;
-        var response:String = _lastResponseBody.readUTFBytes(_lastResponseBody.bytesAvailable);
-        var token:OAuthToken = OAuthToken.fromString(response);
-        result.token = token;
-        _lastAccessToken = token;
+        var responseSrc:String = _lastResponseBody.readUTFBytes(_lastResponseBody.bytesAvailable);
+        var response:OAuthResponse = OAuthResponse.fromString(responseSrc);
+        result.response = response;
+        _lastAccessToken = response.token;
         dispatchEvent(new OAuthEvent(OAuthEvent.GET_ACCESS_TOKEN_COMPLETED, result));
       } else {
         dispatchEvent(new OAuthEvent(OAuthEvent.GET_ACCESS_TOKEN_FAILED, result));
@@ -653,8 +652,6 @@ package org.coderepos.oauth {
       params.oauth_signature = method.sign(baseString);
       return params;
     }
-
   }
-
 }
 

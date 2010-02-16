@@ -10,7 +10,8 @@ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
 */
 
-package org.coderepos.oauth {
+package org.coderepos.oauth
+{
 
   /**
    * Class represents OAuth's token.
@@ -55,6 +56,7 @@ package org.coderepos.oauth {
     }
 
     /**
+     * [Deprecated]
      * decodes string and returns it as OAuthToken object.
      *
      * @param encodedString
