@@ -56,7 +56,7 @@ package org.coderepos.oauth {
     public function OAuthRequestOption() { }
 
     public function getAllParams():Object {
-        var obj:Object = new Object();
+        var obj:Object = {};
         var prop:String;
         if (extraParams != null) {
             for (prop in extraParams) {

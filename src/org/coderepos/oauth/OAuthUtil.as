@@ -111,7 +111,8 @@ package org.coderepos.oauth {
       if (scheme != "http" && scheme != "https") {
         throw new ArgumentError("uri is invalid.");
       }
-      var normalized:String = scheme + "://" + uri.authority;
+      var normalized:String = scheme.toLowerCase()
+        + "://" + uri.authority.toLowerCase();
       var port:uint = uint(uri.port);
       if (uri.port && (port != 80 && port != 443)) {
         normalized += ":" + String(port);
@@ -129,13 +130,13 @@ package org.coderepos.oauth {
      * @playerversion 9.0
      */
     public static function normalizeParams(params:Object):String {
-      var pairs:Array = new Array();
+      var pairs:Array = [];
       for (var prop:String in params) {
         if (prop != "realm" && prop != "oauth_signature") {
-          var pair:String = encode(prop)
-                          + "="
-                          + encode(params[prop]);
-          pairs.push(pair);
+              var pair:String = encode(prop)
+                              + "="
+                              + encode(params[prop]);
+              pairs.push(pair);
         }
       }
       pairs.sort();
@@ -154,7 +155,7 @@ package org.coderepos.oauth {
     public static function parseAuthHeader(header:String):Object {
       header = header.replace(/^\s*OAuth\s*/, '');
       var pairs:Array = header.split(/\,\s*/);
-      var params:Object = new Object();
+      var params:Object = {};
       var i:int;
       for (i = 0; i < pairs.length; i++) {
         var pair:Array = pairs[i].split(/=/);
@@ -176,7 +177,7 @@ package org.coderepos.oauth {
      */
     public static function buildAuthHeader(realm:String, params:Object):String {
       var head:String = "OAuth realm=\"" + realm + "\"";
-      var pairs:Array = new Array();
+      var pairs:Array = [];
       for (var prop:String in params) {
         if (prop.match(/^x?oauth_/)) {
           var pair:String = encode(prop)

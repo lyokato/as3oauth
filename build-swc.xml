@@ -11,7 +11,7 @@
     <external-library-path>
       <path-element>${flexlib}/libs/player/9/playerglobal.swc</path-element>
       <path-element>lib/corelib-20070830.swc</path-element>
-      <path-element>lib/as3crypto-1_3_patched.swc</path-element>
+      <path-element>lib/as3crypto_patched.swc</path-element>
       <path-element>lib/as3httpclientlib-1_0_5.swc</path-element>
     </external-library-path>
     
@@ -23,6 +23,7 @@
       <class>org.coderepos.oauth.OAuthConsumer</class>
       <class>org.coderepos.oauth.OAuthParamMethod</class>
       <class>org.coderepos.oauth.OAuthRequest</class>
+      <class>org.coderepos.oauth.OAuthResponse</class>
       <class>org.coderepos.oauth.OAuthRequestOption</class>
       <class>org.coderepos.oauth.OAuthSignatureMethod</class>
       <class>org.coderepos.oauth.OAuthToken</class>
@@ -38,5 +39,5 @@
     <language>EN</language>
     <title>AS3 OAuth Consumer Library</title>
   </metadata>
-  <output>bin/as3oauth-1_0_0.swc</output>
+  <output>bin/as3oauth-1_0_2.swc</output>
 </flex-config>

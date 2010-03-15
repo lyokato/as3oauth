@@ -12,13 +12,23 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 package org.coderepos.oauth {
 
-  import flash.events.*;
+  import flash.events.EventDispatcher;
+  import flash.events.Event;
+  import flash.events.ErrorEvent;
+  import flash.events.IOErrorEvent;
+  import flash.events.SecurityErrorEvent;
+
   import flash.utils.ByteArray;
-  import org.httpclient.*;
-  import org.httpclient.events.*;
-  import org.coderepos.oauth.*;
-  import org.coderepos.oauth.events.*;
-  import org.coderepos.oauth.signaturemethods.*;
+  import org.httpclient.HttpClient;
+  import org.httpclient.HttpResponse;
+  import org.httpclient.events.HttpStatusEvent;
+  import org.httpclient.events.HttpDataEvent;
+  import org.httpclient.events.HttpErrorEvent;
+  import org.httpclient.events.HttpResponseEvent;
+  import org.coderepos.oauth.events.OAuthEvent;
+  import org.coderepos.oauth.events.OAuthEventResult;
+  import org.coderepos.oauth.signaturemethods.PLAINTEXT;
+  import org.coderepos.oauth.signaturemethods.HMAC_SHA1;
   import com.adobe.net.URI;
   import com.adobe.utils.StringUtil;
   /**
@@ -386,7 +396,7 @@ package org.coderepos.oauth {
 
         if (option.extraParams != null) {
 
-          var pairs:Array = new Array();
+          var pairs:Array = [];
           for (var prop:String in option.extraParams) {
             var pair:String = OAuthUtil.encode(prop) + '=' + OAuthUtil.encode(option.extraParams[prop]);
             pairs.push(pair);
@@ -539,6 +549,19 @@ package org.coderepos.oauth {
       sendRequest(uri, option);
     }
 
+    public function getAccessTokenByXAuth(uri:URI, username:String, password:String):void
+    {
+      if (_isFetching) return;
+      clear();
+      initializeHttpClient(onCompletedToGetAccessToken);
+      var option:OAuthRequestOption = new OAuthRequestOption();
+      option.extraParams = {
+        x_auth_username: username,
+        x_auth_password: password,
+        x_auth_mode:    "client_auth" };
+      sendRequest(uri, option);
+    }
+
     private function onCompletedToGetAccessToken(e:HttpResponseEvent):void {
       var code:uint = uint(_lastResponse.code);
       var result:OAuthEventResult = new OAuthEventResult();
@@ -593,7 +616,7 @@ package org.coderepos.oauth {
     public function genOAuthQuery(httpMethod:String, url:URI,
       token:OAuthToken=null, extraParams:Object=null):String {
       var params:Object = genOAuthParams(httpMethod, url, token, extraParams);
-      var pairs:Array = new Array();
+      var pairs:Array = [];
       for (var prop:String in params) {
         var pair:String = OAuthUtil.encode(prop) + '=' + OAuthUtil.encode(params[prop]);
         pairs.push(pair);
@@ -632,7 +655,7 @@ package org.coderepos.oauth {
      */
     public function genOAuthParams(httpMethod:String, url:URI,
       token:OAuthToken=null, extraParams:Object=null):Object {
-      var params:Object = new Object();
+      var params:Object = {};
       params.oauth_consumer_key = _consumerKey;
       params.oauth_timestamp = Math.floor((new Date()).getTime() * 1000);
       params.oauth_nonce = OAuthUtil.getRandom(16);
